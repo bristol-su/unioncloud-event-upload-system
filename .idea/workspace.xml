@@ -2,29 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c8df6f-727e-431e-a9be-c906c17c295a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Jobs/ProcessTicket.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/status/errored.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/status/uploaded.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/status/uploading.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/status/waiting.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Event.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Event.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Exceptions/ProcessEventException.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UploadController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UploadController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Jobs/ProcessEvent.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Jobs/ProcessEvent.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Ticket.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Ticket.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Upload.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Upload.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2019_01_06_164438_create_events_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_01_06_164438_create_events_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2019_01_06_164449_create_tickets_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_01_06_164449_create_tickets_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/templates/event_template_example.csv" beforeDir="false" afterPath="$PROJECT_DIR$/public/templates/event_template_example.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/templates/event_ticket_template_example.csv" beforeDir="false" afterPath="$PROJECT_DIR$/public/templates/event_ticket_template_example.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/master.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/master.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/upload.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/upload.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/templates/event_template_example (copy).csv" beforeDir="false" afterPath="$PROJECT_DIR$/public/templates/event_template_example (copy).csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/templates/event_ticket_template_example (copy).csv" beforeDir="false" afterPath="$PROJECT_DIR$/public/templates/event_ticket_template_example (copy).csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/pages/upload_history_index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/upload_history_index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/upload_history_single.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/upload_history_single.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,6 +42,24 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.env">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="600">
+              <caret line="40" selection-start-line="40" selection-end-line="44" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/views/pages/upload_history_index.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="16" column="75" selection-start-line="16" selection-start-column="75" selection-end-line="16" selection-end-column="75" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/web.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="771">
@@ -79,7 +77,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Ticket.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="561">
@@ -203,7 +201,6 @@
         <option value="$PROJECT_DIR$/composer.json" />
         <option value="$PROJECT_DIR$/app/Upload.php" />
         <option value="$PROJECT_DIR$/storage/framework/views/adc8c731f425d29a94a234a3402afb3d5ff90cb1.php" />
-        <option value="$PROJECT_DIR$/resources/views/pages/upload_history_index.blade.php" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/UploadController.php" />
         <option value="$PROJECT_DIR$/vendor/twigger/unioncloud/src/Request/EventRequest.php" />
@@ -215,6 +212,7 @@
         <option value="$PROJECT_DIR$/resources/views/pages/upload_history_single.blade.php" />
         <option value="$PROJECT_DIR$/app/Event.php" />
         <option value="$PROJECT_DIR$/app/Ticket.php" />
+        <option value="$PROJECT_DIR$/resources/views/pages/upload_history_index.blade.php" />
       </list>
     </option>
   </component>
@@ -509,12 +507,12 @@
       <workItem from="1546728047672" duration="7156000" />
       <workItem from="1546789229110" duration="35513000" />
       <workItem from="1546872794908" duration="26160000" />
-      <workItem from="1546942691890" duration="7472000" />
+      <workItem from="1546942691890" duration="8684000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="76301000" />
+    <option name="totallyTimeSpent" value="77513000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -794,13 +792,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/pages/upload_history_index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="161" selection-start-line="30" selection-start-column="161" selection-end-line="30" selection-end-column="161" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Upload.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -839,13 +830,6 @@
             <element signature="e#2034#2146#0#PHP" />
             <element signature="e#2351#2562#0#PHP" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="44" column="38" selection-start-line="44" selection-start-column="38" selection-end-line="44" selection-end-column="38" />
         </state>
       </provider>
     </entry>
@@ -942,6 +926,20 @@
           <folding>
             <element signature="e#23#50#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="40" selection-start-line="40" selection-end-line="44" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/pages/upload_history_index.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="75" selection-start-line="16" selection-start-column="75" selection-end-line="16" selection-end-column="75" />
         </state>
       </provider>
     </entry>

@@ -14,7 +14,7 @@
                 <th>Upload ID</th>
                 <th>Name</th>
                 <th>Date Uploaded</th>
-                <th>Status</th>
+                <th>Status (This gets stuck on uploading so ignore it Tom!)</th>
                 <th>View</th>
             </tr>
             </thead>
@@ -27,6 +27,7 @@
                     <th>
                         @if($upload->confirmed == 0)
                             @include('status.waiting', ['text' => 'Confirm to begin upload'])
+                            {{--// TODO Make this status show as complete--}}
                         @elseif($upload->uploaded == 0)
                             @if( ! empty( array_filter( $upload->events->pluck('error_message')->toArray() ) ) || ! empty( array_filter( $upload->getAllTickets()->pluck('error_message')->toArray() ) ))
                                 @include('status.errored', ['text' => 'One of the events or tickets haven\'t uploaded'])

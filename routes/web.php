@@ -49,8 +49,8 @@ Route::middleware(['auth'])->group(function () {
 
     # Show the contents of a specific upload
     Route::get('/upload/history/{upload}', function(App\Upload $upload){
-        $events = $upload->events()->with('tickets')->get();
-        $tickets = $upload->getAllTickets($events);
+        $events = $upload->events()->get();
+        $tickets = $upload->getAllTickets();
         return view('pages.upload_history_single')->with([
             'upload' => $upload,
             'events' => $events,
@@ -58,5 +58,15 @@ Route::middleware(['auth'])->group(function () {
         ]);
     });
 
+    # Retry uploading an event
+    Route::post('upload/event/retry/{event}', function(App\Event $event) {
+        $event->addToTaskProcessor();
+        return back();
+    });
+
+    Route::post('upload/ticket/retry/{ticket}', function(App\Ticket $ticket) {
+        $ticket->addToTaskProcessor();
+        return back();
+    });
 });
 

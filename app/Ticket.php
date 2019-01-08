@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Jobs\ProcessTicket;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model
@@ -24,6 +26,23 @@ class Ticket extends Model
         'mandatory_membership_type_id',
     ];
 
+    protected $casts = [
+        'price' => 'int',
+        'vat_exempt' => 'boolean',
+        'max_sell' => 'int',
+        'max_ticket_per_user' => 'int',
+        'is_guest_ticket' => 'boolean',
+        'stop_ticket_sales' => 'boolean',
+        'is_bulk_ticket' => 'boolean',
+        'restricted_to_usergroup' => 'array',
+        'uploaded' => 'boolean'
+    ];
+
+    protected $dates = [
+        'start_date_time',
+        'end_date_time'
+    ];
+
     public function event()
     {
         return $this->belongsTo('App\Event');
@@ -32,7 +51,6 @@ class Ticket extends Model
     public static function getColumnArrays()
     {
         return [
-            'id',
             'event_ticket_name',
             'ticket_description',
             'availability',
@@ -70,5 +88,30 @@ class Ticket extends Model
             'restricted_to_usergroup',
             'mandatory_membership_type_id'
         ];
+    }
+
+    public function getUnionCloudFormattedData()
+    {
+        $database_columns = Ticket::getColumnArrays();
+        $uc_columns = Ticket::getUnionCloudArrays();
+        $formatted_data = [];
+        for($i=0;$i<count($database_columns);$i++)
+        {
+            $field = $database_columns[$i];
+            if($this->$field !== '' && $this->$field !== null)
+            {
+                $formatted_data[$uc_columns[$i]] = ($this->$field instanceof Carbon?$this->$field->format('d-m-Y H:i'):$this->$field);
+            }
+        }
+
+        return $formatted_data;
+    }
+
+
+    public function addToTaskProcessor()
+    {
+        $this->error_message = null;
+        $this->save();
+        ProcessTicket::dispatch($this->event, $this);
     }
 }

@@ -1,5 +1,5 @@
 Unique Event ID,Event Ticket Name,Ticket Description,Availabiltiy,Price,VAT Exempt,Max Sell,Max Ticket per User,Is Guest Ticket?,Start Date,End Date,Stop Ticket Sales,Cost Centre Code,Is Bulk Ticket,Restricted to UserGroup,Mandatory Membership Type ID
-1,Student Ticket,Student ticket for yoga,online,2,FALSE,100,1,,31-01-2024 00:00,31-01-2025 09:00,,,,,
+1,Student Ticket,Student ticket for yoga,online,2,FALSE,100,1,,31-01-2024 00:00,31-01-2025 09:00,,,,"234234,23423,242342",
 1,General Ticket,General ticket for yoga,online,4,FALSE,70,1,,31-01-2024 00:00,31-01-2025 09:00,,,,,
 2,General Ticket,Only ticket for Pilates,online,6,FALSE,150,1,,31-01-2024 00:00,31-01-2025 09:00,,,,,
 3,General Ticket,Only ticket for Dance,online,5,FALSE,150,1,,31-01-2024 00:00,31-01-2025 09:00,,,,,

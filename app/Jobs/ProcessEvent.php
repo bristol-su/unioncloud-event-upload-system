@@ -12,12 +12,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
+use Twigger\UnionCloud\API\UnionCloud;
 
 class ProcessEvent implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $event;
+
+    /**
+     * @var UnionCloud
+     */
+    protected $unioncloud;
 
     public $tries = 1;
 
@@ -43,63 +50,51 @@ class ProcessEvent implements ShouldQueue
             $this->uploadEvent($event);
         } catch (\Exception $e)
         {
-            Log::error($e);
-            $event->error_message = $e->getMessage();
+            if(property_exists($e, 'unionCloudMessage') && false)
+            {
+                $event->error_message = $e->unionCloudMessage;
+            } else {
+                $event->error_message = $e->getMessage();
+            }
             $event->save();
         }
-
-        // TODO Let someone know it's finished
     }
 
     private function uploadEvent(Event $event)
     {
         // TODO Implement method
-        throw new \Exception('test error', 500);
-        /*
-         * If it hasn't been uploaded:
-         *      Convert all parameters
-         *      Try and upload
-         *          If successful, mark the model as uploaded and update the ID. Remove the error message
-         *          if failed, throw an exception and update the model error message
-         *
-         * If the event was successfully uploaded:
-         */
-        $tickets = $event->tickets()->where('uploaded', 0)->get();
-
-        foreach($tickets as $ticket)
+        if($event->uploaded === false)
         {
-            try {
-                $this->uploadTicket($ticket);
-            } catch (\Exception $e)
+
+            /** @var UnionCloud $unioncloud */
+            $unioncloud = resolve('Twigger\UnionCloud\API\UnionCloud');
+            $unioncloud->debug();
+            $unioncloud_event = $unioncloud->events()->create(array('data' => $event->getUnionCloudFormattedData()))->get()->first();
+
+            if($unioncloud_event->event_id !== false)
             {
-                $ticket->error_message = $e->getMessage();
-                $ticket->save();
+                $event->uploaded = true;
+                $event->unioncloud_event_id = $unioncloud_event->event_id;
+                $event->error_message = null;
+                $event->save();
+            } else {
+                throw new \Exception('Event #'.$event->id.' couldn\'t be uploaded, please contact support.', 500);
+
+            }
+        }
+        if($event->uploaded === true) {
+            $tickets = $event->tickets()->where('uploaded', 0)->get();
+
+            foreach ($tickets as $ticket) {
+                ProcessTicket::dispatch($event, $ticket);
             }
         }
     }
 
-    private function uploadTicket(Ticket $ticket)
-    {
-        // TODO Implement method
-        throw new \Exception('Error message from unioncloud', 400, null);
-        /*
-         * Convert all parameters
-         * Try and upload
-         *      If successful, update model uploaded and model id Remove the error message
-         *      If failed, throw an exception and update the model error message
-         */
-    }
 
     public function failed(\Exception $exception)
     {
-        if (property_exists($exception, 'erroredClass'))
-        {
-            $errorClass = $exception->erroredClass;
-            $errorClass->error_message = $exception->getMessage();
-            $errorClass->save();
-        }
-
-        // TODO Set the error message in the relevant column in the right table.
+        Log::debug($exception);
     }
 
 

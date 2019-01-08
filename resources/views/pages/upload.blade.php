@@ -24,7 +24,7 @@
             </div>
             <input id="upload-name" name="upload-name" type="text" value="fit-and-fab-{{\Carbon\Carbon::now()->format('d_m_Y-H-i')}}" class="form-control" aria-describedby="inputGroupFileAddon01">
         </div>
-        {!! $errors->first('event-spreadsheet', '<p class="invalid-feedback" style="display: block;">:message</p>') !!}
+        {!! $errors->first('upload-name', '<p class="invalid-feedback" style="display: block;">:message</p>') !!}
 
         <!-- CSV Event Sheet -->
         <span class="help-text">Find the event template <a href="{{url('/event-template')}}">here</a></span>
@@ -67,4 +67,14 @@
             $(this).next('.custom-file-label').html(fileName);
         })
     </script>
+
+    @if($errors->has('csv_validation'))
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->get('csv_validation') as $error)
+                    <li style="text-align: left;">{{$error}}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 @endsection('content)

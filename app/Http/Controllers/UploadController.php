@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ProcessEvent;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
+use Illuminate\Validation\Rule;
 use ParseCsv\Csv;
 use App\Upload;
 use App\Event;
@@ -16,14 +20,11 @@ class UploadController extends Controller
 {
     public function saveCSV(Request $request)
     {
-        // Check both files are uploaded
-        // TODO Check the name is a valid and unique name
-        if ( ! $request->hasFile('event-spreadsheet')) {
-            if ( ! $request->hasFile('ticket-spreadsheet')) {
-                return back()->withErrors(['event-spreadsheet' => 'Please upload an event spreadsheet', 'ticket-spreadsheet' => 'Please upload a ticket spreadsheet']);
-            }
-            return back()->withErrors(['event-spreadsheet' => 'Please upload an event spreadsheet']);
-        }
+        $request->validate([
+            'upload-name' => 'string|unique:uploads,name|required',
+            'ticket-spreadsheet' => 'file|required|mimes:csv,txt',
+            'event-spreadsheet' => 'file|required|mimes:csv,txt'
+        ]);
 
         // Parse them into arrays
         $events = new Csv($request->file('event-spreadsheet')->getPathName());
@@ -37,11 +38,26 @@ class UploadController extends Controller
         if(($missing_event_id = $this->checkTicketsHaveEvents($event_upload, $ticket_upload)) !== true)
         {
             return back()->withErrors(['validation-errors' => 'The event ID \''.$missing_event_id.'\' was referenced by a ticket but couldn\'t be found in the event spreadsheet']);
-            // Throw an error since there was a ticket without an event
         }
 
-        // Validate all fields using a validator. You can return validation errors to
-        // TODO Create validators
+        // Convert types to real types
+        $event_upload = $this->convertEventArrayTypes($event_upload);
+        $ticket_upload = $this->convertTicketArrayTypes($ticket_upload);
+
+        // Validate all fields
+        $errors = [];
+        foreach($event_upload as $event)
+        {
+            $errors = $this->appendValidationErrors($errors, $this->validateEvent($event));
+        }
+        foreach($ticket_upload as $ticket)
+        {
+            $errors = $this->appendValidationErrors($errors, $this->validateTicket($ticket));
+        }
+        if(count($errors) > 0)
+        {
+            return back()->withErrors(['csv_validation' => $errors]);
+        }
 
         // Create and save models
         $upload_id = $this->saveModels($request, $event_upload, $ticket_upload);
@@ -60,7 +76,6 @@ class UploadController extends Controller
      */
     public function createEventArray($events)
     {
-        // TODO parse event tags properly
         $unioncloudStructure = [
             'custom_unique_event_id' => null,
             'event_name' => null,
@@ -92,6 +107,7 @@ class UploadController extends Controller
             $i = 0;
             foreach($unioncloudStructure as $index => &$value)
             {
+
                 $csvValue = $event[$events->titles[$i]];
                 $value = $csvValue;
                 $i++;
@@ -113,11 +129,11 @@ class UploadController extends Controller
      */
     public function createTicketArray($tickets)
     {
-        // TODO parse event tags properly
         $unioncloudStructure = [
             'custom_unique_event_id' => null,
             'event_ticket_name' => null,
             'ticket_description' => null,
+            'availability' => null,
             'price' => null,
             'vat_exempt' => null,
             'max_sell' => null,
@@ -128,8 +144,7 @@ class UploadController extends Controller
             'stop_ticket_sales' => null,
             'cost_centre_code' => null,
             'is_bulk_ticket' => null,
-            'availability' => null,
-            'restricted_to_ug' => null,
+            'restricted_to_usergroup' => null,
             'mandatory_membership_type_id' => null
         ];
 
@@ -160,6 +175,115 @@ class UploadController extends Controller
             }
         }
         return true;
+    }
+
+    public function convertEventArrayTypes($events)
+    {
+        /*
+         * If an type is changed here, change it in the database and cast it in the model.
+         */
+        foreach($events as &$event)
+        {
+            $event['event_type_id'] = (int) $event['event_type_id'];
+            $event['start_date_time'] = Carbon::parse($event['start_date_time']);
+            $event['end_date_time'] = Carbon::parse($event['end_date_time']);
+            $event['published_date_time'] = Carbon::parse($event['published_date_time']);
+            $event['hide_ticket_count'] = (strtolower($event['hide_ticket_count']) === 'true'?true:false);
+            $event['over_eighteen'] = (strtolower($event['over_eighteen']) === 'true'?true:false);
+            $event['create_bespoke_subsite'] = (strtolower($event['create_bespoke_subsite']) === 'true'?true:false);
+            $event['include_rss_feed'] = (strtolower($event['include_rss_feed']) === 'true'?true:false);
+            $event['group_id'] = (int) $event['group_id'];
+            $event['capacity'] = (int) $event['capacity'];
+            $event['event_tags'] = ($event['event_tags'] != ''?array_map(function($v) { return array('id'=>$v); }, explode(',', $event['event_tags'])):null);
+            $event = array_filter($event, function($e){ return ($e !== '' && $e !== null); });
+        }
+
+        return $events;
+    }
+
+    public function convertTicketArrayTypes($tickets)
+    {
+        foreach($tickets as &$ticket)
+        {
+            $ticket['start_date_time'] = Carbon::parse($ticket['start_date_time']);
+            $ticket['end_date_time'] = Carbon::parse($ticket['end_date_time']);
+            $ticket['price'] = (int) $ticket['price'];
+            $ticket['vat_exempt'] = (strtolower($ticket['vat_exempt']) === 'true'?true:false);
+            $ticket['max_sell'] = (int) $ticket['max_sell'];
+            $ticket['max_ticket_per_user'] = (int) $ticket['max_ticket_per_user'];
+            $ticket['is_guest_ticket'] = (strtolower($ticket['is_guest_ticket']) === 'true'?true:false);
+            $ticket['stop_ticket_sales'] = (strtolower($ticket['stop_ticket_sales']) === 'true'?true:false);
+            $ticket['is_bulk_ticket'] = (strtolower($ticket['is_bulk_ticket']) === 'true'?true:false);
+            $ticket['restricted_to_usergroup'] = ($ticket['restricted_to_usergroup'] != ''?array_map(function($v) { return array('id'=>$v); }, explode(',', $ticket['restricted_to_usergroup'])):null);
+            $ticket = array_filter($ticket, function($t){ return ($t !== '' && $t !== null); });
+        }
+        return $tickets;
+    }
+
+    public function validateEvent($event)
+    {
+        return Validator::make($event, [
+            'custom_unique_event_id' => 'required',
+            'event_name' => 'required',
+            'description' => 'required',
+            'event_type_id' => 'required|integer',
+            'start_date_time' => 'required|date',
+            'end_date_time' => 'required|date',
+            'capacity' => 'required|integer',
+            'location' => 'required',
+            'contact_details' => 'required',
+            'event_code' => 'sometimes',
+            'group_id' => 'sometimes|integer',
+            'nominal_code' => 'sometimes',
+            'cost_centre_code' => 'sometimes',
+            'published_date_time' => 'sometimes|date',
+            'logo_url' => 'sometimes|url',
+            'website_url' => 'sometimes|url',
+            'hide_ticket_count' => 'sometimes|boolean',
+            'over_eighteen' => 'sometimes|boolean',
+            'create_bespoke_subsite' => 'sometimes|boolean',
+            'include_rss_feed' => 'sometimes|boolean',
+            'event_specific_t_and_c' => 'sometimes',
+            'event_tags' => 'sometimes|array'
+        ]);
+    }
+
+    public function validateTicket($ticket)
+    {
+        return Validator::make($ticket, [
+            'custom_unique_event_id' => 'required',
+            'event_ticket_name' => 'required',
+            'ticket_description' => 'required',
+            'price' => 'sometimes|integer',
+            'vat_exempt' => 'sometimes|boolean',
+            'max_sell' => 'sometimes|integer',
+            'max_ticket_per_user' => 'sometimes|integer',
+            'is_guest_ticket' => 'sometimes|boolean',
+            'start_date_time' => 'sometimes|date',
+            'end_date_time' => 'sometimes|date',
+            'stop_ticket_sales' => 'sometimes|boolean',
+            'cost_centre_code' => 'sometimes',
+            'is_bulk_ticket' => 'sometimes|boolean',
+            'availability' => 'required',
+            'restricted_to_usergroup' => 'sometimes|array',
+            'mandatory_membership_type_id' => 'sometimes'
+        ]);
+    }
+
+    public function appendValidationErrors($errors, $validator)
+    {
+        if( $validator->fails() )
+        {
+            foreach($validator->errors()->getMessages() as $field)
+            {
+                foreach($field as $message)
+                {
+                    $errors[] = $message;
+                }
+            }
+        }
+
+        return $errors;
     }
 
     public function saveModels($request, $events, $tickets)
@@ -208,8 +332,8 @@ class UploadController extends Controller
         {
             abort(404);
         }
-        $events = $upload->events()->with('tickets')->get();
-        $tickets = $upload->getAllTickets($events);
+        $events = $upload->events;
+        $tickets = $upload->getAllTickets();
 
         return view('pages.upload_history_single')->with([
             'upload'=>$upload,

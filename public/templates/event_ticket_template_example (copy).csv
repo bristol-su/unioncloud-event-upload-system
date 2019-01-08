@@ -1,0 +1,5 @@
+Unique Event ID,Event Ticket Name,Ticket Description,Availabiltiy,Price,VAT Exempt,Max Sell,Max Ticket per User,Is Guest Ticket?,Start Date,End Date,Stop Ticket Sales,Cost Centre Code,Is Bulk Ticket,Restricted to UserGroup,Mandatory Membership Type ID
+1,Test Ticket (Do Not Use),Student ticket for yoga,online,2,FALSE,100,1,FALSE,2-01-2025 09:00,31-01-2025 09:00,TRUE,,FALSE,,
+1,Test Ticket (Do Not Use),General ticket for yoga,online,4,FALSE,50,1,FALSE,2-01-2025 09:00,31-01-2025 09:00,TRUE,,FALSE,,
+2,Test Ticket (Do Not Use),Only ticket for Pilates,online,6,FALSE,150,1,FALSE,2-01-2025 09:00,31-01-2025 09:00,TRUE,,FALSE,,
+3,Test Ticket (Do Not Use),Only ticket for Dance,online,5,FALSE,150,1,FALSE,2-01-2025 09:00,31-01-2025 09:00,TRUE,,FALSE,,

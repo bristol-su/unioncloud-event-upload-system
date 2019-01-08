@@ -21,10 +21,10 @@ class Upload extends Model
         return $this->hasMany('App\Event');
     }
 
-    public function getAllTickets($events)
+    public function getAllTickets()
     {
         $tickets = new Collection();
-        foreach($events->pluck('tickets') as $event_tickets)
+        foreach($this->events()->with('tickets')->get()->pluck('tickets') as $event_tickets)
         {
             foreach($event_tickets as $event_ticket)
             {

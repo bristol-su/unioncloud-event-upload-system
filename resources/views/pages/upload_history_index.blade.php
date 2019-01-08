@@ -26,17 +26,21 @@
                     <th>{{$upload->created_at->format('d-m-Y H-i')}}</th>
                     <th>
                         @if($upload->confirmed == 0)
-                            {{-- // TODO Style the statuses nicely --}}
-                            Not Confirmed
+                            @include('status.waiting', ['text' => 'Confirm to begin upload'])
                         @elseif($upload->uploaded == 0)
-                           Uploading
+                            @if( ! empty( array_filter( $upload->events->pluck('error_message')->toArray() ) ) || ! empty( array_filter( $upload->getAllTickets()->pluck('error_message')->toArray() ) ))
+                                @include('status.errored', ['text' => 'One of the events or tickets haven\'t uploaded'])
+                            @else
+                                @include('status.uploading', ['text' => 'Uploading'])
+                            @endif
                         @else
-                            Uploaded
+                            @include('status.uploaded', ['text' => 'Uploaded'])
                         @endif
                     </th>
                     <th>
-                        {{-- // TODO Style nicely --}}
-                        <a href="{{url('/upload/history/'.$upload->id)}}">View</a>
+                        <a href="{{url('/upload/history/'.$upload->id)}}">
+                            <button type="button" class="btn btn-outline-info">View</button>
+                        </a>
                     </th>
                 </tr>
             @endforeach

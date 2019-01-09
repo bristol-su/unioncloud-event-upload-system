@@ -14,7 +14,7 @@
                 <th>Upload ID</th>
                 <th>Name</th>
                 <th>Date Uploaded</th>
-                <th>Status (This gets stuck on uploading so ignore it Tom!)</th>
+                <th>Status (This gets stuck on uploading so ignore it Tom!) </th>
                 <th>View</th>
             </tr>
             </thead>

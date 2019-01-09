@@ -185,8 +185,13 @@ class UploadController extends Controller
         foreach($events as &$event)
         {
             $event['event_type_id'] = (int) $event['event_type_id'];
-            dd($event['start_date_time']);
-            $event['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['start_date_time']);
+            try {
+
+                $event['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['start_date_time']);
+            } catch (\Exception $e)
+            {
+                dd($e);
+            }
             $event['end_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['end_date_time']);
             try {
                 $event['published_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['published_date_time']);

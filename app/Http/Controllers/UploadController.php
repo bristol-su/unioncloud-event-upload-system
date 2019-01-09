@@ -27,8 +27,12 @@ class UploadController extends Controller
         ]);
 
         // Parse them into arrays
-        $events = new Csv($request->file('event-spreadsheet')->getPathName());
-        $tickets = new Csv($request->file('ticket-spreadsheet')->getPathName());
+        $events = new CSV();
+        $events->encoding('UTF-8');
+        $events->parse($request->file('event-spreadsheet')->getPathName());
+        $tickets = new CSV();
+        $tickets->encoding('UTF-8');
+        $tickets->parse($request->file('ticket-spreadsheet')->getPathName());
 
         // Create arrays with unioncloud indices
         $event_upload = $this->createEventArray($events);
@@ -185,13 +189,7 @@ class UploadController extends Controller
         foreach($events as &$event)
         {
             $event['event_type_id'] = (int) $event['event_type_id'];
-            try {
-
-                $event['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['start_date_time']);
-            } catch (\Exception $e)
-            {
-                dd($e);
-            }
+            $event['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['start_date_time']);
             $event['end_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['end_date_time']);
             try {
                 $event['published_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['published_date_time']);

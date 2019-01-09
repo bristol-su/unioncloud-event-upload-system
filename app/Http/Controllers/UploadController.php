@@ -187,7 +187,12 @@ class UploadController extends Controller
             $event['event_type_id'] = (int) $event['event_type_id'];
             $event['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['start_date_time']);
             $event['end_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['end_date_time']);
-            $event['published_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['published_date_time']);
+            try {
+                $event['published_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['published_date_time']);
+            } catch (\Exception $e)
+            {
+                $event['published_date_time'] = null;
+            }
             $event['hide_ticket_count'] = (strtolower($event['hide_ticket_count']) === 'true'?true:false);
             $event['over_eighteen'] = (strtolower($event['over_eighteen']) === 'true'?true:false);
             $event['create_bespoke_subsite'] = (strtolower($event['create_bespoke_subsite']) === 'true'?true:false);
@@ -205,8 +210,16 @@ class UploadController extends Controller
     {
         foreach($tickets as &$ticket)
         {
-            $ticket['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $ticket['start_date_time']);
-            $ticket['end_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $ticket['end_date_time']);
+            try{
+                $ticket['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $ticket['start_date_time']);
+            } catch (\Exception $e) {
+                $ticket['start_date_time'] = null;
+            }
+            try {
+                $ticket['end_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $ticket['end_date_time']);
+            } catch (\Exception $e) {
+                $ticket['end_date_time'] = null;
+            }
             $ticket['price'] = (int) $ticket['price'];
             $ticket['vat_exempt'] = (strtolower($ticket['vat_exempt']) === 'true'?true:false);
             $ticket['max_sell'] = (int) $ticket['max_sell'];

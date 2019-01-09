@@ -185,7 +185,6 @@ class UploadController extends Controller
         foreach($events as &$event)
         {
             $event['event_type_id'] = (int) $event['event_type_id'];
-            dd($event['start_date_time']);
             $event['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['start_date_time']);
             $event['end_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $event['end_date_time']);
             try {
@@ -211,14 +210,16 @@ class UploadController extends Controller
     {
         foreach($tickets as &$ticket)
         {
-            try{
+            try {
                 $ticket['start_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $ticket['start_date_time']);
-            } catch (\Exception $e) {
+            } catch (\Exception $e)
+            {
                 $ticket['start_date_time'] = null;
             }
             try {
                 $ticket['end_date_time'] = Carbon::createFromFormat('d/m/Y H:i', $ticket['end_date_time']);
-            } catch (\Exception $e) {
+            } catch (\Exception $e)
+            {
                 $ticket['end_date_time'] = null;
             }
             $ticket['price'] = (int) $ticket['price'];

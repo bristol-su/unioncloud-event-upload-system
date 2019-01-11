@@ -60,7 +60,6 @@ class ProcessTicket implements ShouldQueue
 
     private function uploadTicket(Ticket $ticket)
     {
-        // TODO Implement method
         if($ticket->uploaded === false)
         {
             $unioncloud = resolve('Twigger\UnionCloud\API\UnionCloud');

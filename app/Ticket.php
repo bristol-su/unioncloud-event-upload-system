@@ -85,7 +85,7 @@ class Ticket extends Model
             'stop_ticket_sales',
             'cost_centre_code',
             'is_bulk_ticket',
-            'restricted_to_usergroup',
+            'restricted_to_ug',
             'mandatory_membership_type_id'
         ];
     }
